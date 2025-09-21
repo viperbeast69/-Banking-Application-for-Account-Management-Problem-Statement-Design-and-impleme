@@ -1,0 +1,197 @@
+import java.util.Scanner;
+class Account
+{
+    long accNo;
+    String holderName;
+    double bal;
+    String email;
+    long phnno;
+    Account(long accNo,String name,double bal,String email,long phnno)
+    {
+        this.accNo=accNo;
+        this.holderName=name;
+        this.bal=bal;
+        this.email=email;
+        this.phnno=phnno;
+    }
+    void deposit(double amt)
+    {
+        if(amt>0)
+        {
+            bal+=amt;
+            System.out.println("Rs. "+amt+" recieved in account");
+        }
+        else
+        {
+            System.out.println("Error! Insufficient Funds");
+        }
+    }
+    void withdraw(double amt)
+    {
+        if(amt>0 && bal>=amt)
+        {
+            bal-=amt;
+            System.out.println("Rs. "+amt+" is paid to the bearer.");
+        }
+        else if(amt<=0)
+        {
+            System.out.println("Error! Invalid Amount");
+        }
+        else
+        {
+            System.out.println("Error! Insufficient Funds");
+        }
+    }
+    void displayInfo()
+    {
+        System.out.println("Welcome "+holderName);
+        System.out.println("Account Number: "+accNo);
+        System.out.println("Balance: "+bal);
+        System.out.println("E-Mail: "+email);
+        System.out.println("Contact Number: "+phnno);
+    }
+    void updateDetail(String email,long phnno)
+    {
+        this.email=email;
+        this.phnno=phnno;
+        System.out.println("Your details are now updated!");
+    }
+}
+class BankApp {
+    Account[] accounts;
+    int accCount;
+    Scanner scanner;
+
+    BankApp(int size) {
+        accounts = new Account[size];
+        accCount = 0;
+        scanner = new Scanner(System.in);
+    }
+
+    void createAcct() {
+        if (accCount < accounts.length) {
+            System.out.print("Enter account number: ");
+            long accNo = scanner.nextLong();
+            scanner.nextLine();
+            System.out.print("Enter name: ");
+            String holderName = scanner.nextLine();
+            System.out.print("Enter phone number: ");
+            long phnno = scanner.nextLong();
+            System.out.print("Initial Banking Amount: ");
+            int bal = scanner.nextInt();
+            scanner.nextLine();
+            System.out.print("E-mail ID: ");
+            String email = scanner.nextLine();
+            accounts[accCount] = new Account(accNo, holderName, bal, email, phnno);
+            accCount++;
+            System.out.println("Account made! Welcome "+holderName);
+        } else {
+            System.out.println("Error! Maximum Limit Reached!");
+        }
+    }
+
+    Account findAccount(long accNum) {
+        for (int i = 0; i < accCount; i++) {
+            if (accounts[i].accNo == accNum) {
+                return accounts[i];
+            }
+        }
+        return null;
+    }
+
+    void performDeposit() {
+        System.out.print("Enter Account Number: ");
+        long accNum = scanner.nextLong();
+        System.out.print("Enter deposit amount: ");
+        double amt = scanner.nextDouble();
+        Account acc = findAccount(accNum);
+        if (acc != null) {
+            acc.deposit(amt);
+        } else {
+            System.out.println("Error! No Account found");
+        }
+    }
+
+    void performWithdrawal()
+    {
+        System.out.print("Enter Account Number: ");
+        long accNum = scanner.nextLong();
+        System.out.print("Withdrawal Amount: ");
+        double amt = scanner.nextDouble();
+        Account acc = findAccount(accNum);
+        if (acc != null) {
+            acc.withdraw(amt);
+        } else {
+            System.out.print("Invalid Amount!");
+        }
+    }
+
+    void showDetails() {
+        System.out.print("Enter Account Number: ");
+        long accNum = scanner.nextLong();
+        Account acc = findAccount(accNum);
+        if (acc != null) {
+            acc.displayInfo();
+        } else {
+            System.out.print("Error! No account found");
+        }
+    }
+
+    void updateContact() {
+        System.out.print("Enter Account Number: ");
+        long accNum = scanner.nextLong();
+        scanner.nextLine();
+        System.out.print("Enter New E-mail: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter New Phone-Number: ");
+        long phnno = scanner.nextLong();
+        Account acc = findAccount(accNum);
+        if (acc != null) {
+            acc.updateDetail(email, phnno);
+        } else {
+            System.out.print("Error! Account Not Found!");
+        }
+    }
+
+    void mainUI() {
+        int ch;
+        do {
+            System.out.println("Welcome! User");
+            System.out.println("1. Create Account");
+            System.out.println("2. Deposital Service");
+            System.out.println("3. Withdrawal Service");
+            System.out.println("4. Check Credentials");
+            System.out.println("5. Update Credentials");
+            System.out.println("6. Exit");
+            ch = scanner.nextInt();
+            switch (ch) {
+                case 1:
+                    createAcct();
+                    break;
+                case 2:
+                    performDeposit();
+                    break;
+                case 3:
+                    performWithdrawal();
+                    break;
+                case 4:
+                    showDetails();
+                    break;
+                case 5:
+                    updateContact();
+                    break;
+                case 6:
+                    System.out.println("Have a Nice Day!");
+                    break;
+                default:
+                    System.out.println("Error! Request Time-Out");
+            }
+        }
+        while(ch!=6);
+    }
+
+    public static void main(String[] args) {
+        BankApp ai = new BankApp(10);
+        ai.mainUI();
+    }
+}
